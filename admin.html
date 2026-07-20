@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Singharasa Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view" class="admin-layout" style="min-height: 100vh; display: flex; flex-direction: column;">
+        <!-- Top Navbar -->
+        <nav class="navbar" id="no-print-navbar" style="position: sticky; top: 0; z-index: 100; padding: 0.5rem 2%;">
+            <div class="flex justify-between items-center w-full">
+                <div class="flex items-center">
+                    <h1 class="logo" style="margin: 0; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.5rem;">👑</span> Admin Panel
+                    </h1>
+                </div>
+                
+                <div class="nav-links flex gap-6 items-center">
+                    <a href="#" class="nav-link admin-nav-item active" data-tab="cashier" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Cashier POS</a>
+                    <a href="#" class="nav-link admin-nav-item" data-tab="sales" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Sales & Graph</a>
+                    <a href="#" class="nav-link admin-nav-item" data-tab="orders" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Orders <span id="pending-orders-badge" class="badge badge-pending" style="display:none; margin-left: 4px;">0</span></a>
+                </div>
+
+                <div class="flex items-center gap-4" style="position: relative;">
+                    <button class="btn btn-outline" id="notif-btn" style="padding: 8px 16px; font-size: 0.9rem; color: var(--text-light); border-color: rgba(255,255,255,0.3); border-radius: 8px;">
+                        🔔 <span id="notif-count" class="badge badge-danger" style="display:none; position: absolute; top: -5px; right: 90px;">0</span>
+                    </button>
+                    <!-- Notification Panel -->
+                    <div id="notif-panel" class="card" style="display: none; position: absolute; right: 80px; top: 50px; width: 320px; z-index: 100; color: var(--text-dark); box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: left;">
+                        <h4 style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">Notifications</h4>
+                        <ul id="notif-list" style="list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0;">
+                            <li class="text-muted" style="font-size: 0.9rem;">No new notifications</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="logout-btn" style="padding: 8px 20px; font-size: 0.9rem; background: var(--danger); border: none; color: white; border-radius: 8px;">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main" style="flex: 1; padding: 2rem 2%; width: 100%;">
+
+            <div class="admin-content">
+                <!-- Cashier Tab -->
+                <section id="cashier-tab" class="dashboard-section fade-in">
+                    <div class="grid-2">
+                        <!-- POS Left: Calculator & Bill -->
+                        <div class="card flex-col" style="height: calc(100vh - 150px); padding: 1.5rem; display: flex;">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 style="margin: 0; font-family: 'Fredoka', sans-serif;">Current Bill</h3>
+                                <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; color: var(--danger); border-color: var(--danger);" id="clear-bill-btn">Clear All</button>
+                            </div>
+                            
+                            <div id="printable-bill" style="flex: 1; overflow-y: auto; background: #fff; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);">
+                                <!-- Bill Items -->
+                                <div style="text-align: center; border-bottom: 2px dashed #eee; margin-bottom: 1rem; padding-bottom: 1rem;">
+                                    <h4 style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1.2rem; margin-bottom: 4px;">Singharasa Products</h4>
+                                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.4;">No 79, Baddegama rd, Gonapinuvala</p>
+                                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.4;">Tel: 0707434345</p>
+                                </div>
+                                <div id="pos-bill-items" style="min-height: 100px;">
+                                    <p class="text-muted" style="text-align: center; margin-top: 2rem;">No items added.</p>
+                                </div>
+                                <div style="border-top: 2px dashed #eee; margin-top: 1rem; padding-top: 1rem; display: flex; justify-content: space-between; font-weight: 600; font-size: 1.2rem; color: var(--text-dark);">
+                                    <span>Total</span>
+                                    <span>LKR <span id="pos-total">0</span></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Calculator Area -->
+                            <div style="background: var(--bg-light); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+                                <input type="text" id="calc-display" readonly placeholder="Cash Tendered" style="width: 100%; text-align: right; font-size: 1.5rem; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: #fff; font-family: 'Outfit', sans-serif; font-weight: 500; color: var(--text-dark); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                                
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="7">7</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="8">8</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="9">9</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff; color: var(--danger); border-color: #ffdada;" data-val="clear">C</button>
+                                    
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="4">4</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="5">5</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="6">6</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="00">00</button>
+                                    
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="1">1</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="2">2</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="3">3</button>
+                                    <button class="btn btn-outline calc-btn" style="padding: 10px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; background: #fff;" data-val="0">0</button>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px;">
+                                     <button class="btn btn-primary" id="pos-pay-btn" style="padding: 14px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 15px rgba(59, 40, 36, 0.2);">Pay (LKR <span id="pay-btn-amount">0</span>)</button>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-outline w-full" id="print-bill-btn" onclick="window.print()" style="padding: 14px; border-radius: 8px; font-weight: 600;">🖨️ Print Receipt</button>
+                        </div>
+
+                        <!-- POS Right: Item Selection -->
+                        <div class="card" style="height: calc(100vh - 150px); overflow-y: auto;">
+                            <h3 class="mb-4">Items</h3>
+                            <div class="grid-2" id="pos-items-grid">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sales Tab -->
+                <section id="sales-tab" class="dashboard-section" style="display: none;">
+                    <!-- Sales Sub-tabs -->
+                    <div class="flex justify-center mb-4">
+                        <div style="background: var(--bg-card); padding: 4px; border-radius: 12px; display: inline-flex; gap: 4px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <button class="tab-btn active btn btn-primary" data-subtab="sales-list" style="padding: 8px 24px; border-radius: 8px; font-weight: 600; border: none;">Sales List</button>
+                            <button class="tab-btn btn btn-outline" data-subtab="sales-graph" style="padding: 8px 24px; border-radius: 8px; font-weight: 600; border: none;">Sales Graph</button>
+                        </div>
+                    </div>
+
+                    <!-- Sales List Section -->
+                    <div id="sales-list" class="sub-section">
+                        <div class="card mb-4" style="padding: 1.5rem;">
+                            <div class="flex justify-between items-center">
+                                <h3 style="margin: 0; font-family: 'Fredoka', sans-serif;">Recent Sales</h3>
+                                <div class="flex gap-4">
+                                    <input type="text" id="sales-search" placeholder="Search Order ID..." style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                    <select id="sales-month-filter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: #fff; font-family: inherit; cursor: pointer;">
+                                        <option value="">All Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="overflow-x: auto; padding: 1.5rem;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Order ID</th>
+                                        <th>Total (LKR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Sales Graph Section -->
+                    <div id="sales-graph" class="sub-section" style="display: none;">
+                        <div class="card mb-4 flex justify-between items-center" style="padding: 1.5rem;">
+                            <h3 style="margin: 0; font-family: 'Fredoka', sans-serif;">Monthly Sales Trends</h3>
+                            <select id="graph-month-filter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: #fff; font-family: inherit; cursor: pointer;">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                        <div class="card" style="padding: 2rem;">
+                            <canvas id="salesChart" width="400" height="150"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Orders Tab -->
+                <section id="orders-tab" class="dashboard-section" style="display: none;">
+                    <div class="card">
+                        <h3 class="mb-4">Customer Orders</h3>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirm Dialog Safe Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal">
+            <h3 style="margin-bottom: 1rem;">Confirm Action</h3>
+            <p id="confirm-msg" class="mb-4">Are you sure?</p>
+            <div class="flex justify-end gap-2">
+                <button class="btn btn-outline" id="confirm-no">Cancel</button>
+                <button class="btn btn-primary" id="confirm-yes">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

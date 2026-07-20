@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singharasa - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-logo">Singharasa</h1>
+            <p class="auth-subtitle">Welcome back! Please login to your account.</p>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <div class="auth-input-group">
+                    <label for="login-email">Email or Username</label>
+                    <input type="text" id="login-email" required placeholder="Enter your email or username">
+                </div>
+                <div class="auth-input-group">
+                    <label for="login-password">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="login-password" required placeholder="Enter your password" style="padding-right: 40px;">
+                        <button type="button" class="password-toggle" onclick="togglePassword('login-password', this)">👁️</button>
+                    </div>
+                </div>
+                <p id="login-error" style="color: #e74c3c; font-size: 0.85rem; margin-bottom: 1rem; display: none;">Invalid credentials.</p>
+                
+                <button type="submit" class="auth-btn">Login</button>
+
+                <div class="auth-switch">
+                    Don't have an account? <a onclick="toggleForm('register')">Create an account</a>
+                </div>
+            </form>
+
+            <!-- Registration Form -->
+            <form id="register-form" class="auth-form">
+                <div class="auth-input-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" required placeholder="John Doe">
+                </div>
+                <div class="auth-input-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required placeholder="john@example.com">
+                </div>
+                <div class="auth-input-group">
+                    <label for="reg-password">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="reg-password" required placeholder="Create a password" style="padding-right: 40px;">
+                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password', this)">👁️</button>
+                    </div>
+                </div>
+                <p id="reg-error" style="color: #e74c3c; font-size: 0.85rem; margin-bottom: 1rem; display: none;"></p>
+                
+                <button type="submit" class="auth-btn">Create Account</button>
+
+                <div class="auth-switch">
+                    Already have an account? <a onclick="toggleForm('login')">Login</a>
+                </div>
+            </form>
+
+            <!-- Info text for demo -->
+            <div style="margin-top: 2rem; font-size: 0.75rem; color: #999; border-top: 1px solid #eee; padding-top: 1rem;">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Admin: sithumpehesara000@gmail.com / krishanthi</p>
+                <p>Customer: user@gmail.com / 123456789</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
