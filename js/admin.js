@@ -95,6 +95,7 @@ async function loadPOSItems() {
         div.style.cursor = 'pointer';
         div.style.textAlign = 'center';
         div.style.padding = '1rem';
+        div.style.border = '1px solid #d1d5db'; // Added border here
         
         const title = document.createElement('h4');
         title.textContent = p.name;
