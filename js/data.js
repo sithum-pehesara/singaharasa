@@ -1,5 +1,5 @@
-// Mock Data and Shared State (For Prototype purposes only)
-// Security note: In a real app, do not store sensitive auth data in localStorage.
+// Firebase Data Operations
+// Uses the 'db' variable initialized in firebase-init.js
 
 const PRODUCTS = [
     { id: 1, name: 'Standard Pastry Sheet 500g', price: 350, stock: 150, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80' },
@@ -10,91 +10,111 @@ const PRODUCTS = [
     { id: 9, name: 'Almond Croissant', price: 1300, stock: 40, image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80' }
 ];
 
-// Always update local storage during development to reflect new items
-localStorage.setItem('products', JSON.stringify(PRODUCTS));
-
-if (!localStorage.getItem('orders')) {
-    localStorage.setItem('orders', JSON.stringify([]));
-}
-if (!localStorage.getItem('sales_v2_generated')) {
-    // Generate some mock historical sales data for the graph for the last 6 months
-    const mockSales = JSON.parse(localStorage.getItem('sales') || '[]');
-    const now = new Date();
-    
-    // Generate for the last 6 months (0 to 5)
-    for (let m = 0; m < 6; m++) {
-        for(let i = 1; i <= 28; i++) {
-            if(Math.random() > 0.5) {
-                mockSales.push({ 
-                    date: new Date(now.getFullYear(), now.getMonth() - m, i).toISOString(), 
-                    total: Math.floor(Math.random() * 5000) + 1000 
-                });
+// Helper to seed initial products if missing
+async function seedProductsIfNeeded() {
+    try {
+        const snapshot = await db.collection('products').limit(1).get();
+        if (snapshot.empty) {
+            for (const p of PRODUCTS) {
+                await db.collection('products').doc(p.id.toString()).set(p);
             }
         }
+    } catch (e) {
+        console.warn("Could not seed products. Firebase config might be missing.", e);
     }
-    localStorage.setItem('sales', JSON.stringify(mockSales));
-    localStorage.setItem('sales_v2_generated', 'true');
 }
+seedProductsIfNeeded();
 
-function getProducts() {
-    return JSON.parse(localStorage.getItem('products') || '[]');
-}
-
-function updateProductStock(id, qtyChange) {
-    const products = getProducts();
-    const product = products.find(p => p.id === id);
-    if (product) {
-        product.stock += qtyChange;
-        localStorage.setItem('products', JSON.stringify(products));
+async function getProducts() {
+    try {
+        const snapshot = await db.collection('products').get();
+        return snapshot.docs.map(doc => doc.data());
+    } catch (e) {
+        console.error("Error getting products:", e);
+        return [];
     }
 }
 
-function placeOrder(customerName, items, total, paymentType, ccMasked) {
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    const newOrder = {
-        id: 'ORD-' + Math.floor(Math.random() * 10000),
-        customerName,
-        items,
-        total,
-        paymentType,
-        ccMasked,
-        status: 'pending',
-        date: new Date().toISOString()
-    };
-    orders.push(newOrder);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    return newOrder;
-}
-
-function getOrders() {
-    return JSON.parse(localStorage.getItem('orders') || '[]');
-}
-
-function confirmOrder(orderId) {
-    const orders = getOrders();
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    if (orderIndex > -1) {
-        orders[orderIndex].status = 'confirmed';
-        localStorage.setItem('orders', JSON.stringify(orders));
-        
-        // Also add to sales
-        const sales = JSON.parse(localStorage.getItem('sales') || '[]');
-        sales.push({
-            date: new Date().toISOString(),
-            total: orders[orderIndex].total,
-            orderId: orderId
+async function updateProductStock(id, qtyChange) {
+    try {
+        const docRef = db.collection('products').doc(id.toString());
+        await db.runTransaction(async (transaction) => {
+            const doc = await transaction.get(docRef);
+            if (!doc.exists) return;
+            const newStock = doc.data().stock + qtyChange;
+            transaction.update(docRef, { stock: newStock });
         });
-        localStorage.setItem('sales', JSON.stringify(sales));
-        
-        // Decrease stock
-        orders[orderIndex].items.forEach(item => {
-            updateProductStock(item.id, -item.qty);
-        });
+    } catch (e) {
+        console.error("Error updating stock:", e);
     }
 }
 
-function getSales() {
-    return JSON.parse(localStorage.getItem('sales') || '[]');
+async function placeOrder(customerName, items, total, paymentType, ccMasked) {
+    try {
+        const newOrder = {
+            id: 'ORD-' + Math.floor(Math.random() * 10000),
+            customerName,
+            items,
+            total,
+            paymentType,
+            ccMasked,
+            status: 'pending',
+            date: new Date().toISOString()
+        };
+        await db.collection('orders').doc(newOrder.id).set(newOrder);
+        return newOrder;
+    } catch (e) {
+        console.error("Error placing order:", e);
+        return null;
+    }
+}
+
+async function getOrders() {
+    try {
+        const snapshot = await db.collection('orders').orderBy('date', 'desc').get();
+        return snapshot.docs.map(doc => doc.data());
+    } catch (e) {
+        console.error("Error getting orders:", e);
+        return [];
+    }
+}
+
+async function confirmOrder(orderId) {
+    try {
+        const orderRef = db.collection('orders').doc(orderId);
+        const orderDoc = await orderRef.get();
+        
+        if (orderDoc.exists && orderDoc.data().status !== 'confirmed') {
+            const orderData = orderDoc.data();
+            
+            // Update order status
+            await orderRef.update({ status: 'confirmed' });
+            
+            // Record Sale
+            await db.collection('sales').add({
+                date: new Date().toISOString(),
+                total: orderData.total,
+                orderId: orderId
+            });
+            
+            // Decrease stock
+            for (const item of orderData.items) {
+                await updateProductStock(item.id, -item.qty);
+            }
+        }
+    } catch (e) {
+        console.error("Error confirming order:", e);
+    }
+}
+
+async function getSales() {
+    try {
+        const snapshot = await db.collection('sales').orderBy('date', 'desc').get();
+        return snapshot.docs.map(doc => doc.data());
+    } catch (e) {
+        console.error("Error getting sales:", e);
+        return [];
+    }
 }
 
 // Utility to mask credit cards (Security Requirement)
@@ -109,4 +129,14 @@ function maskCreditCard(cardNumber) {
 // Utility for safe text insertion (Security Requirement to prevent XSS)
 function safeSetText(element, text) {
     element.textContent = text;
+}
+
+async function getUsers() {
+    try {
+        const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+        console.error("Error getting users:", e);
+        return [];
+    }
 }

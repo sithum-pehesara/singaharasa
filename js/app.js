@@ -1,9 +1,12 @@
 // Customer Application Logic
 
-// Auth Check (Customer only pages)
-if (window.location.pathname.endsWith('customer.html')) {
+// Auth Check (Main site pages)
+const isMainSite = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+let isGuest = false;
+
+if (isMainSite) {
     if (sessionStorage.getItem('customerAuth') !== 'true') {
-        window.location.href = 'index.html';
+        isGuest = true;
     } else {
         const userEmail = sessionStorage.getItem('customerEmail') || 'User@guest.com';
         const nameNode = document.getElementById('profile-username');
@@ -20,11 +23,18 @@ const profileSidebar = document.getElementById('profile-sidebar');
 const profileOverlay = document.getElementById('profile-overlay');
 
 if (profileBtn) {
-    profileBtn.addEventListener('click', () => {
-        profileSidebar.classList.add('active');
-        profileOverlay.style.display = 'flex';
-        setTimeout(() => profileOverlay.classList.add('active'), 10);
-    });
+    if (isGuest) {
+        profileBtn.textContent = 'Login';
+        profileBtn.addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+    } else {
+        profileBtn.addEventListener('click', () => {
+            profileSidebar.classList.add('active');
+            profileOverlay.style.display = 'flex';
+            setTimeout(() => profileOverlay.classList.add('active'), 10);
+        });
+    }
 }
 
 if (closeProfileBtn) {
@@ -32,9 +42,104 @@ if (closeProfileBtn) {
         profileSidebar.classList.remove('active');
         profileOverlay.classList.remove('active');
         setTimeout(() => profileOverlay.style.display = 'none', 300);
+        
+        // Reset edit profile state if active
+        const editProfileForm = document.getElementById('edit-profile-form');
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        if (editProfileForm && editProfileForm.style.display === 'block') {
+            profileSidebar.classList.remove('enlarged');
+            editProfileForm.style.display = 'none';
+            editProfileBtn.textContent = 'Edit Profile';
+            editProfileBtn.classList.remove('btn-primary');
+            editProfileBtn.classList.add('btn-outline');
+        }
     };
     closeProfileBtn.addEventListener('click', closeProfile);
     profileOverlay.addEventListener('click', closeProfile);
+}
+
+// Edit Profile Logic
+const editProfileBtn = document.getElementById('edit-profile-btn');
+const editProfileForm = document.getElementById('edit-profile-form');
+const editUsernameInput = document.getElementById('edit-username');
+const editPasswordInput = document.getElementById('edit-password');
+
+if (editProfileBtn && editProfileForm) {
+    let isEditing = false;
+    
+    editProfileBtn.addEventListener('click', async () => {
+        const profileUsername = document.getElementById('profile-username');
+        
+        if (!isEditing) {
+            // Enter edit mode
+            isEditing = true;
+            profileSidebar.classList.add('enlarged');
+            editProfileForm.style.display = 'block';
+            editUsernameInput.value = profileUsername.textContent; 
+            editPasswordInput.value = '123456789'; // Dummy password display
+        } else {
+            // Clicked again (Save or Cancel)
+            if (editProfileBtn.textContent === 'Save') {
+                const newUsername = editUsernameInput.value.trim();
+                const newPassword = editPasswordInput.value;
+                
+                if (newUsername) {
+                    editProfileBtn.textContent = 'Saving...';
+                    editProfileBtn.disabled = true;
+                    
+                    try {
+                        const user = firebase.auth().currentUser;
+                        if (user) {
+                            // Update display name in Firebase Auth
+                            await user.updateProfile({ displayName: newUsername });
+                            
+                            // Update name in Firestore users collection
+                            await db.collection('users').doc(user.uid).update({
+                                name: newUsername
+                            });
+                            
+                            // Update password if changed from dummy value
+                            if (newPassword && newPassword !== '123456789') {
+                                await user.updatePassword(newPassword);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        alert('Error: ' + error.message);
+                    }
+                    
+                    editProfileBtn.disabled = false;
+                    profileUsername.textContent = newUsername;
+                    
+                    // Update email display to match actual user if logged in
+                    const profileEmail = document.getElementById('profile-email');
+                    if (profileEmail) {
+                        const user = firebase.auth().currentUser;
+                        profileEmail.textContent = user ? user.email : newUsername.toLowerCase().replace(/\s+/g, '') + '@gmail.com';
+                    }
+                }
+            }
+            
+            // Revert back
+            isEditing = false;
+            profileSidebar.classList.remove('enlarged');
+            editProfileForm.style.display = 'none';
+            editProfileBtn.textContent = 'Edit Profile';
+            editProfileBtn.classList.remove('btn-primary');
+            editProfileBtn.classList.add('btn-outline');
+        }
+    });
+
+    const handleInputChange = () => {
+        if (isEditing) {
+            editProfileBtn.textContent = 'Save';
+            editProfileBtn.classList.remove('btn-outline');
+            editProfileBtn.classList.add('btn-primary');
+        }
+    };
+
+    editUsernameInput.addEventListener('input', handleInputChange);
+    editPasswordInput.addEventListener('input', handleInputChange);
 }
 
 // Logout
@@ -42,7 +147,7 @@ const logoutBtn = document.getElementById('customer-logout-btn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         sessionStorage.clear();
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     });
 }
 
@@ -67,8 +172,8 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 // Load Menu
-function loadMenu() {
-    const products = getProducts();
+async function loadMenu() {
+    const products = await getProducts();
     const menuGrid = document.getElementById('menu-grid');
     menuGrid.replaceChildren(); // Safe clear
 
@@ -186,37 +291,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const placeOrderBtn = document.getElementById('place-order-btn');
     if (placeOrderBtn) {
-        placeOrderBtn.addEventListener('click', () => {
-            const selectedMethod = document.querySelector('input[name="pay_method"]:checked').value;
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        placeOrderBtn.addEventListener('click', async () => {
+            if (cart.length === 0) return;
             
-            const customerEmail = sessionStorage.getItem('customerEmail') || 'User@guest.com';
-            const customerName = customerEmail.split('@')[0];
-            
-            let masked = '****';
-            if(selectedMethod === 'Credit Card') masked = '****-****-****-6006';
-            if(selectedMethod === 'Paypal') masked = 'paypal-5221';
-            if(selectedMethod === 'Google Pay') masked = 'gpay-4142';
-
-            placeOrder(customerName, cart, total, selectedMethod, masked);
-
-            cart = [];
-            updateCartUI();
-
-            document.getElementById('order-success-modal').classList.add('active');
+            try {
+                placeOrderBtn.textContent = 'Processing...';
+                placeOrderBtn.disabled = true;
+                
+                const snipcartItems = cart.map(item => ({
+                    id: String(item.id), // ID must be a string
+                    name: item.name,
+                    price: parseFloat(item.price),
+                    url: '/', // Use root for local testing/validation
+                    quantity: parseInt(item.qty),
+                    image: item.image,
+                    description: item.description || ''
+                }));
+                
+                // Add items one by one to ensure it works across all Snipcart v3 minor versions
+                for (const item of snipcartItems) {
+                    await Snipcart.api.cart.items.add(item);
+                }
+                
+                Snipcart.api.theme.cart.open();
+                
+                // Reset UI
+                placeOrderBtn.textContent = 'Pay via Snipcart';
+                placeOrderBtn.disabled = false;
+                
+            } catch (error) {
+                console.error("Snipcart Error:", error);
+                alert("Failed to load Snipcart payment gateway.");
+                placeOrderBtn.textContent = 'Pay via Snipcart';
+                placeOrderBtn.disabled = false;
+            }
         });
     }
 });
 
 // Polling for Order Confirmations (Simulating real-time notification)
-let lastOrderCount = getOrders().length;
-setInterval(() => {
-    const currentOrders = getOrders();
+setInterval(async () => {
+    const currentOrders = await getOrders();
     if(currentOrders.length > 0) {
         // Check if any order was recently confirmed
-        const latestOrder = currentOrders[currentOrders.length - 1];
+        const latestOrder = currentOrders[0]; // because getOrders sorts by date desc
         // If it's a new confirmed status we haven't seen in this session (naive check for prototype)
-        if(latestOrder.status === 'confirmed' && !sessionStorage.getItem(`notified-${latestOrder.id}`)) {
+        if(latestOrder && latestOrder.status === 'confirmed' && !sessionStorage.getItem(`notified-${latestOrder.id}`)) {
             const notif = document.getElementById('customer-notification');
             document.getElementById('notif-order-id').textContent = latestOrder.id;
             notif.style.display = 'block';
@@ -227,7 +347,7 @@ setInterval(() => {
             }, 5000);
         }
     }
-}, 2000);
+}, 5000);
 
 // Init
 window.onload = () => {

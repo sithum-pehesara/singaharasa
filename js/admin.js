@@ -6,8 +6,8 @@ let isAdminLoggedIn = sessionStorage.getItem('adminAuth') === 'true';
 // DOM Elements
 // Auth Check on load
 function checkAuth() {
-    if (!isAdminLoggedIn) {
-        window.location.href = 'index.html';
+    if (sessionStorage.getItem('adminAuth') !== 'true') {
+        window.location.href = 'login.html';
     } else {
         initDashboard();
     }
@@ -16,13 +16,13 @@ function checkAuth() {
 // Logout
 document.getElementById('logout-btn').addEventListener('click', () => {
     sessionStorage.removeItem('adminAuth');
-    isAdminLoggedIn = false;
-    window.location.href = 'index.html';
+    sessionStorage.clear();
+    window.location.href = 'login.html';
 });
 
 // Navigation
 document.querySelectorAll('.admin-nav-item').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', async (e) => {
         e.preventDefault();
         document.querySelectorAll('.admin-nav-item').forEach(l => l.classList.remove('active'));
         e.target.classList.add('active');
@@ -36,7 +36,7 @@ document.querySelectorAll('.admin-nav-item').forEach(link => {
         const targetSec = document.getElementById(targetId + '-tab');
         targetSec.style.display = 'block';
         if(targetId === 'sales') {
-            renderSalesList();
+            await renderSalesList();
             // Default to list view
             document.getElementById('sales-list').style.display = 'block';
             document.getElementById('sales-graph').style.display = 'none';
@@ -50,13 +50,15 @@ document.querySelectorAll('.admin-nav-item').forEach(link => {
                 firstTab.classList.add('btn-primary');
             }
         }
-        if(targetId === 'orders') renderOrders();
+        if(targetId === 'orders') await renderOrders();
+        if(targetId === 'users') await renderUsers();
+        if(targetId === 'stock') await renderStock();
     });
 });
 
 // Sales Subtabs Logic
 document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
         // Handle styling
         document.querySelectorAll('.tab-btn').forEach(b => {
             b.classList.remove('btn-primary', 'active');
@@ -70,12 +72,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         document.getElementById(e.target.getAttribute('data-subtab')).style.display = 'block';
 
         if(e.target.getAttribute('data-subtab') === 'sales-graph') {
-            renderGraph();
+            await renderGraph();
         }
     });
 });
-
-
 
 
 // ==========================================
@@ -84,8 +84,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 let posBill = [];
 let calculatorInput = "";
 
-function loadPOSItems() {
-    const products = getProducts();
+async function loadPOSItems() {
+    const products = await getProducts();
     const grid = document.getElementById('pos-items-grid');
     grid.replaceChildren();
 
@@ -187,27 +187,32 @@ document.querySelectorAll('.calc-btn').forEach(btn => {
     });
 });
 
-document.getElementById('pos-pay-btn').addEventListener('click', () => {
+document.getElementById('pos-pay-btn').addEventListener('click', async () => {
     if(posBill.length === 0) return;
     const total = parseInt(document.getElementById('pos-total').textContent);
     
-    // Save to sales
-    const sales = getSales();
-    sales.push({
-        date: new Date().toISOString(),
-        total: total,
-        orderId: 'POS-' + Math.floor(Math.random()*1000)
-    });
-    localStorage.setItem('sales', JSON.stringify(sales));
+    try {
+        // Save to sales via Firestore
+        await db.collection('sales').add({
+            date: new Date().toISOString(),
+            total: total,
+            orderId: 'POS-' + Math.floor(Math.random()*1000)
+        });
 
-    // Update stock
-    posBill.forEach(item => updateProductStock(item.id, -item.qty));
+        // Update stock
+        for (const item of posBill) {
+            await updateProductStock(item.id, -item.qty);
+        }
 
-    posBill = [];
-    calculatorInput = "";
-    if(calcDisplay) calcDisplay.value = "";
-    renderPOSBill();
-    // Re-render other tabs if needed
+        posBill = [];
+        calculatorInput = "";
+        if(calcDisplay) calcDisplay.value = "";
+        renderPOSBill();
+        // Re-render other tabs if needed
+    } catch (e) {
+        console.error("Error paying via POS:", e);
+        alert("Failed to record POS sale. Check your Firebase connection.");
+    }
 });
 
 // ==========================================
@@ -235,8 +240,8 @@ function populateMonthFilters() {
     }
 }
 
-function renderSalesList() {
-    const sales = getSales();
+async function renderSalesList() {
+    const sales = await getSales();
     const tbody = document.getElementById('sales-table-body');
     tbody.replaceChildren();
 
@@ -280,9 +285,9 @@ document.getElementById('sales-search').addEventListener('input', renderSalesLis
 document.getElementById('sales-month-filter').addEventListener('change', renderSalesList);
 
 let chartInstance = null;
-function renderGraph() {
+async function renderGraph() {
     const ctx = document.getElementById('salesChart').getContext('2d');
-    const sales = getSales();
+    const sales = await getSales();
     const monthFilter = document.getElementById('graph-month-filter').value;
     
     // Safely calculate current and previous month in local time
@@ -367,8 +372,8 @@ document.getElementById('graph-month-filter').addEventListener('change', renderG
 // ==========================================
 let pendingOrderActionId = null;
 
-function renderOrders() {
-    const orders = getOrders();
+async function renderOrders() {
+    const orders = await getOrders();
     const tbody = document.getElementById('orders-table-body');
     tbody.replaceChildren();
 
@@ -437,13 +442,13 @@ function showConfirmDialog(orderId) {
     document.getElementById('confirm-modal').classList.add('active');
 }
 
-document.getElementById('confirm-yes').addEventListener('click', () => {
+document.getElementById('confirm-yes').addEventListener('click', async () => {
     if(pendingOrderActionId) {
-        confirmOrder(pendingOrderActionId);
+        await confirmOrder(pendingOrderActionId);
         pendingOrderActionId = null;
         document.getElementById('confirm-modal').classList.remove('active');
-        renderOrders();
-        checkNotifications(); // Refresh notifs
+        await renderOrders();
+        await checkNotifications(); // Refresh notifs
     }
 });
 document.getElementById('confirm-no').addEventListener('click', () => {
@@ -456,18 +461,18 @@ document.getElementById('confirm-no').addEventListener('click', () => {
 // ==========================================
 let notifs = [];
 
-function checkNotifications() {
+async function checkNotifications() {
     notifs = [];
     
     // Check pending orders
-    const orders = getOrders();
+    const orders = await getOrders();
     const pending = orders.filter(o => o.status === 'pending');
     if(pending.length > 0) {
         notifs.push(`${pending.length} new pending orders require confirmation.`);
     }
 
     // Check low stock
-    const products = getProducts();
+    const products = await getProducts();
     products.forEach(p => {
         if(p.stock < 10) {
             notifs.push(`Low Stock Alert: ${p.name} (Only ${p.stock} left)`);
@@ -508,21 +513,100 @@ document.getElementById('notif-btn').addEventListener('click', () => {
 });
 
 // Polling for updates
-setInterval(() => {
+setInterval(async () => {
     if(isAdminLoggedIn) {
-        checkNotifications();
+        await checkNotifications();
         // If on orders tab, soft refresh badge (and maybe table)
         if(document.getElementById('orders-tab').style.display === 'block') {
-            renderOrders();
+            await renderOrders();
         }
     }
 }, 5000);
 
+// ==========================================
+// USERS LOGIC
+// ==========================================
+async function renderUsers() {
+    const users = await getUsers();
+    const tbody = document.getElementById('users-table-body');
+    tbody.replaceChildren();
+
+    users.forEach(u => {
+        const tr = document.createElement('tr');
+        
+        const tdName = document.createElement('td');
+        tdName.textContent = u.name || 'N/A';
+
+        const tdEmail = document.createElement('td');
+        tdEmail.textContent = u.email || 'N/A';
+
+        const tdRole = document.createElement('td');
+        const badge = document.createElement('span');
+        badge.className = `badge ${u.role === 'admin' ? 'badge-confirmed' : 'badge-pending'}`;
+        badge.textContent = u.role || 'customer';
+        tdRole.appendChild(badge);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdEmail);
+        tr.appendChild(tdRole);
+        
+        tbody.appendChild(tr);
+    });
+}
+
+// ==========================================
+// STOCK LOGIC
+// ==========================================
+async function renderStock() {
+    const products = await getProducts();
+    const tbody = document.getElementById('stock-table-body');
+    tbody.replaceChildren();
+
+    products.forEach(p => {
+        const tr = document.createElement('tr');
+        
+        const tdName = document.createElement('td');
+        tdName.textContent = p.name;
+
+        const tdPrice = document.createElement('td');
+        tdPrice.textContent = p.price;
+
+        const tdStock = document.createElement('td');
+        tdStock.textContent = p.stock;
+        if(p.stock < 10) {
+            tdStock.style.color = 'var(--danger)';
+            tdStock.style.fontWeight = 'bold';
+        }
+
+        const tdAction = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline';
+        btn.style.padding = '4px 8px';
+        btn.textContent = 'Update Stock';
+        btn.onclick = async () => {
+            const qtyStr = prompt(`Enter quantity to ADD to ${p.name} stock (use negative for removal):`, "0");
+            if(qtyStr !== null && !isNaN(parseInt(qtyStr))) {
+                await updateProductStock(p.id, parseInt(qtyStr));
+                await renderStock();
+                await checkNotifications();
+            }
+        };
+        tdAction.appendChild(btn);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdPrice);
+        tr.appendChild(tdStock);
+        tr.appendChild(tdAction);
+        
+        tbody.appendChild(tr);
+    });
+}
+
 // Init
-function initDashboard() {
+async function initDashboard() {
     populateMonthFilters();
-    loadPOSItems();
-    checkNotifications();
+    await loadPOSItems();
+    await checkNotifications();
 }
 
 // Initial check

@@ -3,75 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singharasa - Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Singharasa - Bakery</title>
+    <meta name="description" content="Order premium pastry sheets from Singharasa Products.">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/auth.css">
+    
+    <script>
+      window.SnipcartSettings = {
+        publicApiKey: 'ZTBmYTVjMDEtMWFiOS00ZThkLWFhOTAtY2I2NTcwY2Q2MGE1NjM5MjA2NDIxMzk2MDE5MDkz',
+        loadStrategy: "on-user-interaction",
+      };
+      (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(f.forEach(function(t){return document.addEventListener(t,o)}),setTimeout(o,window.SnipcartSettings.timeoutDuration)):o()}var a=!1;function o(){if(a)return;a=!0;let t=document.getElementsByTagName("head")[0],n=document.querySelector("#snipcart"),i=document.querySelector('src[src^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][src$="snipcart.js"]')),e=document.querySelector('link[href^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][href$="snipcart.css"]'));n||(n=document.createElement("div"),n.id="snipcart",n.setAttribute("hidden","true"),document.body.appendChild(n)),h(n),i||(i=document.createElement("script"),i.src="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.js"),i.async=!0,t.appendChild(i)),!e&&window.SnipcartSettings.loadCSS&&(e=document.createElement("link"),e.rel="stylesheet",e.type="text/css",e.href="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.css"),t.prepend(e)),f.forEach(function(v){return document.removeEventListener(v,o)})}function h(t){!y||(t.dataset.apiKey=window.SnipcartSettings.publicApiKey,window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl))}})();
+    </script>
 </head>
-<body class="auth-body">
-
-    <div class="auth-container">
-        <div class="auth-card">
-            <h1 class="auth-logo">Singharasa</h1>
-            <p class="auth-subtitle">Welcome back! Please login to your account.</p>
-
-            <!-- Login Form -->
-            <form id="login-form" class="auth-form active">
-                <div class="auth-input-group">
-                    <label for="login-email">Email or Username</label>
-                    <input type="text" id="login-email" required placeholder="Enter your email or username">
-                </div>
-                <div class="auth-input-group">
-                    <label for="login-password">Password</label>
-                    <div style="position: relative;">
-                        <input type="password" id="login-password" required placeholder="Enter your password" style="padding-right: 40px;">
-                        <button type="button" class="password-toggle" onclick="togglePassword('login-password', this)">👁️</button>
-                    </div>
-                </div>
-                <p id="login-error" style="color: #e74c3c; font-size: 0.85rem; margin-bottom: 1rem; display: none;">Invalid credentials.</p>
-                
-                <button type="submit" class="auth-btn">Login</button>
-
-                <div class="auth-switch">
-                    Don't have an account? <a onclick="toggleForm('register')">Create an account</a>
-                </div>
-            </form>
-
-            <!-- Registration Form -->
-            <form id="register-form" class="auth-form">
-                <div class="auth-input-group">
-                    <label for="reg-name">Full Name</label>
-                    <input type="text" id="reg-name" required placeholder="John Doe">
-                </div>
-                <div class="auth-input-group">
-                    <label for="reg-email">Email</label>
-                    <input type="email" id="reg-email" required placeholder="john@example.com">
-                </div>
-                <div class="auth-input-group">
-                    <label for="reg-password">Password</label>
-                    <div style="position: relative;">
-                        <input type="password" id="reg-password" required placeholder="Create a password" style="padding-right: 40px;">
-                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password', this)">👁️</button>
-                    </div>
-                </div>
-                <p id="reg-error" style="color: #e74c3c; font-size: 0.85rem; margin-bottom: 1rem; display: none;"></p>
-                
-                <button type="submit" class="auth-btn">Create Account</button>
-
-                <div class="auth-switch">
-                    Already have an account? <a onclick="toggleForm('login')">Login</a>
-                </div>
-            </form>
-
-            <!-- Info text for demo -->
-            <div style="margin-top: 2rem; font-size: 0.75rem; color: #999; border-top: 1px solid #eee; padding-top: 1rem;">
-                <p><strong>Demo Credentials:</strong></p>
-                <p>Admin: sithumpehesara000@gmail.com / krishanthi</p>
-                <p>Customer: user@gmail.com / 123456789</p>
+<body>
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <button class="btn btn-primary" style="font-size: 1.2rem; padding: 8px 16px; font-weight: bold; font-family: 'Fredoka', sans-serif;" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Singharasa</button>
+            <div class="nav-links">
+                <a href="#about" class="nav-link active" data-target="about">About</a>
+                <a href="#menu" class="nav-link" data-target="menu">Menu</a>
+                <a href="#cart" class="nav-link" data-target="cart">Cart (<span id="cart-count">0</span>)</a>
+                <a href="#contact" class="nav-link" data-target="contact">Contact</a>
             </div>
+            <button class="btn btn-primary" style="font-size: 0.8rem; padding: 8px 20px; background: #5a3c35;" id="profile-btn">👤 Profile</button>
+        </div>
+    </nav>
+
+    <!-- Profile Sidebar Overlay -->
+    <div class="modal-overlay" id="profile-overlay" style="z-index: 999; display: none;"></div>
+
+    <!-- Profile Right Sidebar -->
+    <div id="profile-sidebar" class="sidebar-right">
+        <div class="sidebar-header flex items-center" style="position: relative; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem; justify-content: center;">
+            <h2 style="margin: 0;">My Profile</h2>
+            <button id="close-profile-btn" style="position: absolute; right: 0; background: none; border: none; font-size: 1.5rem; cursor: pointer; padding-bottom: 1rem;">&times;</button>
+        </div>
+        
+        <div class="profile-content" style="flex-grow: 1;">
+            <div style="text-align: center; margin-bottom: 2rem; position: relative;">
+                <div style="width: 80px; height: 80px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; margin: 0 auto 1rem;">
+                    👤
+                </div>
+                <h3 id="profile-username">User</h3>
+                <p id="profile-email" class="text-muted">user@gmail.com</p>
+            </div>
+
+            <!-- Edit Profile Form (Hidden by default) -->
+            <div id="edit-profile-form" style="display: none; margin-bottom: 2rem; text-align: left; background: var(--bg-card); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius);">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.9rem; margin-bottom: 0.5rem;">Username / Email</label>
+                    <input type="text" id="edit-username" class="form-control" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" value="">
+                </div>
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.9rem; margin-bottom: 0.5rem;">Password</label>
+                    <input type="password" id="edit-password" class="form-control" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;" value="123456789">
+                </div>
+            </div>
+
+
+        </div>
+
+        <div style="margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <button id="edit-profile-btn" class="btn btn-outline w-full" style="margin-bottom: 10px;">Edit Profile</button>
+            <button class="btn btn-outline w-full" id="customer-logout-btn" style="color: var(--danger); border-color: var(--danger);">Logout</button>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <!-- Notifications -->
+    <div id="customer-notification" class="container mt-4" style="display: none;">
+        <div class="card" style="background: var(--success); color: white; padding: 1rem; text-align: center;">
+            Order <span id="notif-order-id"></span> has been confirmed!
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1>Freshly baked just for you!</h1>
+        </header>
+
+        <!-- About Section (Why Choosing Us) -->
+        <section id="about" class="section-light">
+            <div class="container split-section">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=800&q=80" alt="Pastry Sheet" class="split-image">
+                </div>
+                <div>
+                    <h2 class="mb-4">Why Choosing Us?</h2>
+                    <p style="margin-bottom: 2rem; color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
+                        We manufacture the highest quality pastry sheets, samosa sheets, and bakery ingredients in Sri Lanka. 
+                        Experience the premium taste, delicate layers, and perfect crispness with every bite.
+                    </p>
+                    <div class="flex gap-4">
+                        <button class="btn btn-outline" onclick="document.querySelector('[data-target=\'menu\']').click()">Learn More</button>
+                        <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'menu\']').click()">Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signature Items (Static demo section for the dark theme look) -->
+        <section class="section-dark">
+            <div class="container">
+                <div class="flex justify-between items-center mb-4">
+                    <h2>Signature Items</h2>
+                    <button class="btn btn-outline" onclick="document.querySelector('.nav-link[data-target=\'menu\']').click();">View Collection</button>
+                </div>
+                <div class="grid-3" style="gap: 1rem;">
+                    <div class="product-card">
+                        <div class="product-card-img-wrapper" style="border-radius: 8px;">
+                            <img src="https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&q=80&w=400" alt="Cupcake">
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-card-img-wrapper" style="border-radius: 8px;">
+                            <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&q=80&w=400" alt="Cake">
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-card-img-wrapper" style="border-radius: 8px;">
+                            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" alt="Chocolate Cake">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Morning Special Section -->
+        <section class="section-dark" style="background-color: #2a1b18;">
+            <div class="container split-section">
+                <div style="padding-right: 2rem;">
+                    <h2 class="mb-4">Morning Special</h2>
+                    <p style="color: rgba(244, 234, 225, 0.7); margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.8;">
+                        Start your day right with our exclusive morning combinations. Fresh, hot, and straight from the oven to your table.
+                    </p>
+                    <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'menu\']').click()">Order Now</button>
+                </div>
+                <div class="grid-2" style="align-items: center; gap: 1.5rem;">
+                    <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=400" alt="Special 1" class="split-image" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid var(--bg-card); transform: translateY(-20px);">
+                    <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&q=80&w=400" alt="Special 2" class="split-image" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid var(--bg-card); transform: translateY(20px);">
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section (Dynamic from app.js) -->
+        <section id="menu" class="section-light">
+            <div class="container">
+                <h2 class="mb-4" style="text-align: center; margin-bottom: 3rem;">Our Menu</h2>
+                <div class="grid-3" id="menu-grid">
+                    <!-- Products dynamically loaded here via app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section id="cart" class="section-light" style="background-color: #fcf6f1; border-top: 1px solid var(--border-color);">
+            <div class="container">
+                <h2 class="mb-4 text-center">Your Cart</h2>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div class="card">
+                        <div id="cart-items" class="flex-col gap-2">
+                            <p class="text-muted">Your cart is empty.</p>
+                        </div>
+                        <div class="mt-4" style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Total: LKR <span id="cart-total">0</span></h3>
+                            <button class="btn btn-primary" id="place-order-btn" disabled style="padding: 10px 30px;">Pay via Snipcart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="section-light" style="padding-top: 2rem;">
+            <div class="container text-center">
+                <h2 class="mb-2">Follow Our Journey</h2>
+                <p class="text-muted mb-4" style="max-width: 600px; margin: 0 auto;">Get a sneak peek behind the scenes, see our daily fresh bakes, and be the first to know about special offers on our social media!</p>
+                <div class="grid-4 mt-4" style="gap: 1rem;">
+                    <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80" alt="Gallery 1" class="gallery-img">
+                    <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&q=80" alt="Gallery 2" class="gallery-img" style="margin-top: 20px;">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80" alt="Gallery 3" class="gallery-img">
+                    <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&q=80" alt="Gallery 4" class="gallery-img" style="margin-top: 20px;">
+                </div>
+                <div style="margin-top: 4rem;">
+                    <button class="btn btn-primary" style="padding: 0.8rem 2.5rem; font-size: 1.1rem;">📸 Follow @Singharasa</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section-dark">
+            <div class="container" style="text-align: center;">
+                <h2 style="margin-bottom: 2rem;">Contact Us</h2>
+                <div style="font-size: 1.2rem; color: rgba(244, 234, 225, 0.8); line-height: 2; max-width: 500px; margin: 0 auto;">
+                    <p><strong>Company:</strong> Singharasa Products</p>
+                    <p><strong>Address:</strong> No 79, Baddegama rd, Gonapinuvala</p>
+                    <p><strong>Tel No:</strong> <a href="tel:0707434345" style="color: var(--secondary-color);">0707434345</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Developer Footer -->
+        <footer style="background-color: var(--bg-card); padding: 3rem 0; border-top: 1px solid var(--border-color); text-align: center;">
+            <div class="container">
+                <h3 style="margin-bottom: 1rem; color: var(--primary-color);">About Developer</h3>
+                <p style="margin-bottom: 0.5rem; font-size: 1.1rem;">
+                    My name is <strong>Sithum Pehesara</strong> and I'm a Full Stack Developer.
+                </p>
+                <div style="margin: 1.5rem 0; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <a href="https://github.com/sithum-pehesara" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background-color: #f4e8df; color: #4a3228; border-radius: 50%; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 5px rgba(0,0,0,0.05)';">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.699-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    </a>
+                    
+                    <a href="https://www.instagram.com/___sithum__pehesara____/" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background-color: #f4e8df; color: #4a3228; border-radius: 50%; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 5px rgba(0,0,0,0.05)';">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+
+                    <a href="https://wa.me/94741400599" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background-color: #f4e8df; color: #4a3228; border-radius: 50%; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 5px rgba(0,0,0,0.05)';">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    </a>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 2rem;">
+                    All credits goes to and all right reserved to <br>
+                    <strong>&copy; 2026 Sithum Pehesara</strong>
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal using Vanilla JS DOM for XSS safe message -->
+    <div class="modal-overlay" id="order-success-modal">
+        <div class="modal">
+            <h2 style="color: var(--success); margin-bottom: 1rem;">Success</h2>
+            <p id="order-success-msg" style="margin-bottom: 1.5rem;">Your order has been placed successfully. Awaiting admin confirmation.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('order-success-modal').classList.remove('active')">Close</button>
+        </div>
+    </div>
+
+
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <script src="js/data.js?v=8"></script>
+    <script src="js/app.js?v=8"></script>
 </body>
 </html>

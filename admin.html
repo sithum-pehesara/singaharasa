@@ -25,6 +25,8 @@
                     <a href="#" class="nav-link admin-nav-item active" data-tab="cashier" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Cashier POS</a>
                     <a href="#" class="nav-link admin-nav-item" data-tab="sales" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Sales & Graph</a>
                     <a href="#" class="nav-link admin-nav-item" data-tab="orders" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Orders <span id="pending-orders-badge" class="badge badge-pending" style="display:none; margin-left: 4px;">0</span></a>
+                    <a href="#" class="nav-link admin-nav-item" data-tab="users" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Users</a>
+                    <a href="#" class="nav-link admin-nav-item" data-tab="stock" style="font-weight: 600; padding-bottom: 4px; border-bottom: 2px solid transparent;">Stock</a>
                 </div>
 
                 <div class="flex items-center gap-4" style="position: relative;">
@@ -186,6 +188,47 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Users Tab -->
+                <section id="users-tab" class="dashboard-section" style="display: none;">
+                    <div class="card">
+                        <h3 class="mb-4">Registered Users</h3>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stock Tab -->
+                <section id="stock-tab" class="dashboard-section" style="display: none;">
+                    <div class="card">
+                        <h3 class="mb-4">Stock Management</h3>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Price (LKR)</th>
+                                        <th>Current Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stock-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -201,6 +244,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="js/firebase-init.js"></script>
 
     <script src="js/data.js"></script>
     <script src="js/admin.js"></script>

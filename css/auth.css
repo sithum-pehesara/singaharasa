@@ -33,7 +33,7 @@
 .auth-logo {
     font-family: 'Playfair Display', serif;
     font-size: 2.8rem;
-    color: var(--text-main);
+    color: var(--primary-color);
     margin-bottom: 0.5rem;
     font-weight: 600;
     letter-spacing: -0.03em;
@@ -115,7 +115,7 @@
 .auth-btn {
     width: 100%;
     padding: 16px;
-    background-color: var(--text-main);
+    background-color: var(--primary-color);
     color: #fff;
     border: none;
     border-radius: 30px;
@@ -141,11 +141,11 @@
 }
 
 .auth-switch a {
-    color: var(--text-main);
+    color: var(--primary-color);
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    border-bottom: 1px solid var(--text-main);
+    border-bottom: 1px solid var(--primary-color);
     padding-bottom: 2px;
 }
 
