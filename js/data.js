@@ -10,111 +10,68 @@ const PRODUCTS = [
     { id: 9, name: 'Almond Croissant', price: 1300, stock: 40, image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&q=80' }
 ];
 
-// Helper to seed initial products if missing
 async function seedProductsIfNeeded() {
-    try {
-        const snapshot = await db.collection('products').limit(1).get();
-        if (snapshot.empty) {
-            for (const p of PRODUCTS) {
-                await db.collection('products').doc(p.id.toString()).set(p);
-            }
-        }
-    } catch (e) {
-        console.warn("Could not seed products. Firebase config might be missing.", e);
-    }
+    // Temporary bypass for demo
+    console.log("Mocking data, no Firebase seed needed.");
 }
 seedProductsIfNeeded();
 
 async function getProducts() {
-    try {
-        const snapshot = await db.collection('products').get();
-        return snapshot.docs.map(doc => doc.data());
-    } catch (e) {
-        console.error("Error getting products:", e);
-        return [];
-    }
+    // Temporary bypass for demo
+    return PRODUCTS;
 }
 
 async function updateProductStock(id, qtyChange) {
-    try {
-        const docRef = db.collection('products').doc(id.toString());
-        await db.runTransaction(async (transaction) => {
-            const doc = await transaction.get(docRef);
-            if (!doc.exists) return;
-            const newStock = doc.data().stock + qtyChange;
-            transaction.update(docRef, { stock: newStock });
-        });
-    } catch (e) {
-        console.error("Error updating stock:", e);
-    }
+    // Temporary bypass for demo
+    console.log(`Mock: Updated stock for ${id} by ${qtyChange}`);
 }
 
 async function placeOrder(customerName, items, total, paymentType, ccMasked) {
-    try {
-        const newOrder = {
-            id: 'ORD-' + Math.floor(Math.random() * 10000),
-            customerName,
-            items,
-            total,
-            paymentType,
-            ccMasked,
-            status: 'pending',
-            date: new Date().toISOString()
-        };
-        await db.collection('orders').doc(newOrder.id).set(newOrder);
-        return newOrder;
-    } catch (e) {
-        console.error("Error placing order:", e);
-        return null;
-    }
+    // Temporary bypass for demo
+    const newOrder = {
+        id: 'ORD-' + Math.floor(Math.random() * 10000),
+        customerName,
+        items,
+        total,
+        paymentType,
+        ccMasked,
+        status: 'pending',
+        date: new Date().toISOString()
+    };
+    console.log("Mock: Placed order", newOrder);
+    return newOrder;
 }
 
 async function getOrders() {
-    try {
-        const snapshot = await db.collection('orders').orderBy('date', 'desc').get();
-        return snapshot.docs.map(doc => doc.data());
-    } catch (e) {
-        console.error("Error getting orders:", e);
-        return [];
-    }
+    // Temporary bypass for demo
+    return [
+        {
+            id: 'ORD-1024',
+            customerName: 'Saman Perera',
+            items: [{ name: 'Standard Pastry Sheet 500g', qty: 2, price: 350 }],
+            total: 700,
+            paymentType: 'card',
+            ccMasked: '****-****-****-4242',
+            status: 'pending',
+            date: new Date().toISOString()
+        }
+    ];
 }
 
 async function confirmOrder(orderId) {
-    try {
-        const orderRef = db.collection('orders').doc(orderId);
-        const orderDoc = await orderRef.get();
-        
-        if (orderDoc.exists && orderDoc.data().status !== 'confirmed') {
-            const orderData = orderDoc.data();
-            
-            // Update order status
-            await orderRef.update({ status: 'confirmed' });
-            
-            // Record Sale
-            await db.collection('sales').add({
-                date: new Date().toISOString(),
-                total: orderData.total,
-                orderId: orderId
-            });
-            
-            // Decrease stock
-            for (const item of orderData.items) {
-                await updateProductStock(item.id, -item.qty);
-            }
-        }
-    } catch (e) {
-        console.error("Error confirming order:", e);
-    }
+    // Temporary bypass for demo
+    console.log(`Mock: Confirmed order ${orderId}`);
 }
 
 async function getSales() {
-    try {
-        const snapshot = await db.collection('sales').orderBy('date', 'desc').get();
-        return snapshot.docs.map(doc => doc.data());
-    } catch (e) {
-        console.error("Error getting sales:", e);
-        return [];
-    }
+    // Temporary bypass for demo
+    return [
+        {
+            orderId: 'ORD-0999',
+            total: 1300,
+            date: new Date(Date.now() - 86400000).toISOString()
+        }
+    ];
 }
 
 // Utility to mask credit cards (Security Requirement)
@@ -132,11 +89,9 @@ function safeSetText(element, text) {
 }
 
 async function getUsers() {
-    try {
-        const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (e) {
-        console.error("Error getting users:", e);
-        return [];
-    }
+    // Temporary bypass for demo
+    return [
+        { id: '1', name: 'Admin', email: 'admin@gmail.com', role: 'admin' },
+        { id: '2', name: 'User', email: 'user@gmail.com', role: 'customer' }
+    ];
 }

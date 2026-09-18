@@ -51,13 +51,10 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     }
 
     try {
-        // Authenticate with Firebase
-        const userCredential = await auth.signInWithEmailAndPassword(email, pass);
+        // Authenticate with Firebase (MOCKED FOR DEMO)
+        // const userCredential = await auth.signInWithEmailAndPassword(email, pass);
         
-        sessionStorage.setItem('customerAuth', 'true');
-        sessionStorage.setItem('customerEmail', userCredential.user.email);
-        sessionStorage.removeItem('adminAuth');
-        window.location.href = 'index.html';
+        throw new Error("Demo Mode: Please use admin@gmail.com or user@gmail.com with password 123456789");
     } catch (error) {
         console.error("Login Error:", error);
         errorEl.textContent = error.message || 'Invalid credentials.';
@@ -81,25 +78,13 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     }
 
     try {
-        // Create user in Firebase Auth
-        const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        // Create user in Firebase Auth (MOCKED FOR DEMO)
+        // const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
         
-        // Update profile with name (optional but good for UI)
-        await userCredential.user.updateProfile({
-            displayName: name
-        });
-
-        // Store additional user details in Firestore
-        await db.collection('users').doc(userCredential.user.uid).set({
-            name: name,
-            email: email,
-            role: 'customer',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
         // Auto login as customer after register
         sessionStorage.setItem('customerAuth', 'true');
         sessionStorage.setItem('customerEmail', email);
+        alert("Demo Mode: Registration mocked successfully.");
         window.location.href = 'index.html';
     } catch (error) {
         console.error("Registration Error:", error);
