@@ -292,6 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const placeOrderBtn = document.getElementById('place-order-btn');
     if (placeOrderBtn) {
         placeOrderBtn.addEventListener('click', async () => {
+            if (isGuest) {
+                window.location.href = 'login.html';
+                return;
+            }
             if (cart.length === 0) return;
             
             try {
