@@ -706,3 +706,129 @@ th { font-family: 'Fredoka', sans-serif; color: var(--text-muted); }
     display: none;
   }
 }
+
+/* =========================================
+   Mobile Responsiveness (Added for Mobile View)
+   ========================================= */
+@media (max-width: 768px) {
+  /* Typography */
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+
+  /* Navbar */
+  .navbar .container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .navbar .btn-primary:first-child {
+    order: 1;
+  }
+  #profile-btn {
+    order: 2;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 50vh;
+    height: auto;
+    padding: 6rem 1rem;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  /* Grids and Layouts */
+  .split-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .split-section > div:first-child {
+    order: 2; /* Image on bottom or top? Keep natural order if possible. Let's not reorder unless needed. */
+  }
+
+  .grid-2, .grid-3, .grid-4, .gallery-grid {
+    grid-template-columns: 1fr !important; /* Force 1 column on mobile */
+    gap: 1.5rem;
+  }
+
+  /* Photo Gallery */
+  .gallery-img {
+    margin-top: 0 !important; /* Override inline margin-top */
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Section Padding */
+  .section-light, .section-dark {
+    padding: 3rem 0;
+  }
+  #menu {
+    padding: 3rem 0;
+  }
+
+  /* Profile Sidebar */
+  .sidebar-right {
+    width: 100%;
+    padding: 1.5rem;
+  }
+  .sidebar-right.enlarged {
+    width: 100%;
+  }
+
+  /* Product Cards */
+  .product-card {
+    max-width: 100%;
+  }
+  .product-card-img-wrapper {
+    padding-bottom: 100%;
+  }
+
+  /* Fix split-section inline styles from html */
+  .section-dark .split-section > div:first-child {
+    padding-right: 0 !important;
+  }
+  
+  .section-dark .split-image {
+    transform: none !important;
+  }
+
+  /* Contact section */
+  #contact p {
+    font-size: 1rem;
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  .hero h1 { font-size: 2rem; }
+  
+  .nav-links {
+    gap: 0.5rem;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+  
+  /* Modals */
+  .modal {
+    padding: 1.5rem;
+  }
+}

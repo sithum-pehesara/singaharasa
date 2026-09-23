@@ -15,6 +15,15 @@
       };
       (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(f.forEach(function(t){return document.addEventListener(t,o)}),setTimeout(o,window.SnipcartSettings.timeoutDuration)):o()}var a=!1;function o(){if(a)return;a=!0;let t=document.getElementsByTagName("head")[0],n=document.querySelector("#snipcart"),i=document.querySelector('src[src^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][src$="snipcart.js"]')),e=document.querySelector('link[href^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][href$="snipcart.css"]'));n||(n=document.createElement("div"),n.id="snipcart",n.setAttribute("hidden","true"),document.body.appendChild(n)),h(n),i||(i=document.createElement("script"),i.src="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.js"),i.async=!0,t.appendChild(i)),!e&&window.SnipcartSettings.loadCSS&&(e=document.createElement("link"),e.rel="stylesheet",e.type="text/css",e.href="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.css"),t.prepend(e)),f.forEach(function(v){return document.removeEventListener(v,o)})}function h(t){!y||(t.dataset.apiKey=window.SnipcartSettings.publicApiKey,window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl))}})();
     </script>
+    <!-- Tailwind CSS (for Footer) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: false,
+        }
+      }
+    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -204,77 +213,83 @@
             </div>
         </section>
 
-        <!-- Main Footer -->
-        <footer style="background-color: var(--bg-dark); color: rgba(244, 234, 225, 0.7); padding: 4rem 0 1rem; font-family: 'Outfit', sans-serif;">
-            <div class="container" style="display: flex; flex-wrap: wrap; gap: 3rem; justify-content: space-between; margin-bottom: 3rem;">
+        <!-- Main Footer (Tailwind CSS) -->
+        <!-- Main Footer (Tailwind CSS) -->
+        <footer class="bg-[#3b2824] text-[#f4eae1]/70 py-16 pb-4 font-['Outfit',sans-serif]">
+            <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-12 mb-12 text-center md:text-left">
                 
                 <!-- Column 1 -->
-                <div style="flex: 2 1 250px;">
-                    <div style="margin-bottom: 1.5rem;">
+                <div class="lg:col-span-2 flex flex-col items-center md:items-start">
+                    <div class="mb-6">
                         <!-- Bakery Logo Text -->
-                        <h2 style="color: var(--text-light); font-size: 2.2rem; margin: 0; font-family: 'Fredoka', sans-serif; display: flex; align-items: center; gap: 0.5rem;">
-                            <!-- Simple icon placeholder -->
-                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--secondary-color); color: var(--bg-dark); border-radius: 8px 8px 8px 0; font-size: 1.5rem;">S</span>
+                        <h2 class="text-[#f4eae1] text-4xl m-0 font-['Fredoka',sans-serif] flex items-center gap-2">
+                            <span class="inline-flex items-center justify-center w-10 h-10 bg-[#d1bba4] text-[#3b2824] rounded-lg rounded-br-none text-2xl">S</span>
                             Singharasa
                         </h2>
                     </div>
-                    <p style="margin-bottom: 2rem; line-height: 1.6; max-width: 280px; color: rgba(244, 234, 225, 0.8);">
+                    <p class="mb-8 leading-relaxed max-w-[280px] text-[#f4eae1]/80">
                         Premium pastry sheets, samosa sheets, and fresh bakery ingredients for your perfect bakes.
                     </p>
-                    <div style="display: flex; gap: 0.8rem;">
-                        <a href="#" style="width: 36px; height: 36px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: var(--secondary-color); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; font-size: 0.9rem;" onmouseover="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--bg-dark)'" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.color='var(--secondary-color)'">in</a>
-                        <a href="#" style="width: 36px; height: 36px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: var(--secondary-color); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; font-size: 0.9rem;" onmouseover="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--bg-dark)'" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.color='var(--secondary-color)'">x</a>
-                        <a href="#" style="width: 36px; height: 36px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: var(--secondary-color); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; font-size: 0.9rem;" onmouseover="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--bg-dark)'" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.color='var(--secondary-color)'">ig</a>
-                        <a href="#" style="width: 36px; height: 36px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: var(--secondary-color); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; font-size: 0.9rem;" onmouseover="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--bg-dark)'" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.color='var(--secondary-color)'">▶</a>
+                    <div class="flex justify-center md:justify-start gap-3">
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 text-[#d1bba4] flex items-center justify-center no-underline transition duration-300 text-sm hover:bg-[#d1bba4] hover:text-[#3b2824]">in</a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 text-[#d1bba4] flex items-center justify-center no-underline transition duration-300 text-sm hover:bg-[#d1bba4] hover:text-[#3b2824]">x</a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 text-[#d1bba4] flex items-center justify-center no-underline transition duration-300 text-sm hover:bg-[#d1bba4] hover:text-[#3b2824]">ig</a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 text-[#d1bba4] flex items-center justify-center no-underline transition duration-300 text-sm hover:bg-[#d1bba4] hover:text-[#3b2824]">▶</a>
                     </div>
                 </div>
 
                 <!-- Column 2 -->
-                <div style="flex: 1 1 120px;">
-                    <h4 style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;">PRODUCTS</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
-                        <li><a href="#menu" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Pastry Sheets</a></li>
-                        <li><a href="#menu" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Samosa Sheets</a></li>
-                        <li><a href="#menu" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Bakery Items</a></li>
-                        <li><a href="#menu" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Special Combos</a></li>
+                <div class="lg:col-span-1">
+                    <h4 class="text-[#f4eae1] mb-6 text-base tracking-wide uppercase">PRODUCTS</h4>
+                    <ul class="list-none p-0 m-0 flex flex-col items-center md:items-start gap-4">
+                        <li><a href="#menu" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Pastry Sheets</a></li>
+                        <li><a href="#menu" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Samosa Sheets</a></li>
+                        <li><a href="#menu" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Bakery Items</a></li>
+                        <li><a href="#menu" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Special Combos</a></li>
                     </ul>
                 </div>
 
                 <!-- Column 3 -->
-                <div style="flex: 1 1 120px;">
-                    <h4 style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;">QUICK LINKS</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
-                        <li><a href="#about" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">About Us</a></li>
-                        <li><a href="#menu" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Our Menu</a></li>
-                        <li><a href="#cart" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Shopping Cart</a></li>
-                        <li><a href="#contact" style="color: rgba(244, 234, 225, 0.7); text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--secondary-color)'" onmouseout="this.style.color='rgba(244, 234, 225, 0.7)'">Contact Us</a></li>
+                <div class="lg:col-span-1">
+                    <h4 class="text-[#f4eae1] mb-6 text-base tracking-wide uppercase">QUICK LINKS</h4>
+                    <ul class="list-none p-0 m-0 flex flex-col items-center md:items-start gap-4">
+                        <li><a href="#about" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">About Us</a></li>
+                        <li><a href="#menu" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Our Menu</a></li>
+                        <li><a href="#cart" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Shopping Cart</a></li>
+                        <li><a href="#contact" class="text-[#f4eae1]/70 no-underline transition duration-300 hover:text-[#d1bba4]">Contact Us</a></li>
                     </ul>
                 </div>
 
                 <!-- Column 4 -->
-                <div style="flex: 2 1 250px;">
-                    <h4 style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;">STAY UPDATED</h4>
-                    <p style="margin-bottom: 1.5rem; color: rgba(244, 234, 225, 0.8);">Get the latest fresh bakes and special offers.</p>
-                    <div style="display: flex; gap: 0.5rem; max-width: 350px;">
-                        <input type="email" placeholder="your@email.com" style="flex: 1; min-width: 0; padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--text-light); outline: none; font-family: inherit;">
-                        <button style="background-color: var(--secondary-color); color: var(--bg-dark); border: none; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-size: 1.2rem; flex-shrink: 0;" onmouseover="this.style.backgroundColor='var(--secondary-hover)'" onmouseout="this.style.backgroundColor='var(--secondary-color)'">
+                <div class="lg:col-span-2 flex flex-col items-center md:items-start">
+                    <h4 class="text-[#f4eae1] mb-6 text-base tracking-wide uppercase">STAY UPDATED</h4>
+                    <p class="mb-6 text-[#f4eae1]/80">Get the latest fresh bakes and special offers.</p>
+                    <div class="flex gap-2 w-full max-w-[350px]">
+                        <input type="email" placeholder="your@email.com" class="flex-1 w-full min-w-0 py-3 px-5 rounded-lg border border-white/20 bg-white/5 text-[#f4eae1] outline-none font-inherit focus:border-[#d1bba4] transition">
+                        <button class="bg-[#d1bba4] text-[#3b2824] border-none rounded-lg w-12 h-12 flex items-center justify-center cursor-pointer transition duration-300 text-xl shrink-0 hover:bg-[#bda38b]">
                             &rarr;
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Developer Credit embedded in the new footer bottom -->
-            <div class="container" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                <p style="margin: 0; font-size: 0.9rem; color: rgba(244, 234, 225, 0.7);">
+            <!-- Developer Credit -->
+            <div class="container mx-auto px-6 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+                <p class="m-0 text-sm text-[#f4eae1]/70 order-2 md:order-1">
                     &copy; 2026 Singharasa Products. All rights reserved.
                 </p>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span style="font-size: 0.9rem; color: rgba(244, 234, 225, 0.7);">Developed by <strong style="color: var(--text-light);">Sithum Pehesara</strong></span>
-                    <div style="display: flex; gap: 0.8rem;">
-                        <a href="https://github.com/sithum-pehesara" target="_blank" style="color: var(--secondary-color); transition: 0.3s; display: flex;" onmouseover="this.style.color='var(--text-light)'" onmouseout="this.style.color='var(--secondary-color)'"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.699-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></a>
-                        <a href="https://www.instagram.com/___sithum__pehesara____/" target="_blank" style="color: var(--secondary-color); transition: 0.3s; display: flex;" onmouseover="this.style.color='var(--text-light)'" onmouseout="this.style.color='var(--secondary-color)'"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-                        <a href="https://wa.me/94741400599" target="_blank" style="color: var(--secondary-color); transition: 0.3s; display: flex;" onmouseover="this.style.color='var(--text-light)'" onmouseout="this.style.color='var(--secondary-color)'"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
+                <div class="flex flex-col md:flex-row items-center gap-4 order-1 md:order-2">
+                    <span class="text-sm text-[#f4eae1]/70">Developed by <strong class="text-[#f4eae1]">Sithum Pehesara</strong></span>
+                    <div class="flex gap-3 justify-center">
+                        <a href="https://github.com/sithum-pehesara" target="_blank" class="text-[#d1bba4] transition duration-300 flex hover:text-[#f4eae1]">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.699-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/___sithum__pehesara____/" target="_blank" class="text-[#d1bba4] transition duration-300 flex hover:text-[#f4eae1]">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://wa.me/94741400599" target="_blank" class="text-[#d1bba4] transition duration-300 flex hover:text-[#f4eae1]">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        </a>
                     </div>
                 </div>
             </div>

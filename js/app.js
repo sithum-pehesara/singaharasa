@@ -9,9 +9,10 @@ if (isMainSite) {
         isGuest = true;
     } else {
         const userEmail = sessionStorage.getItem('customerEmail') || 'User@guest.com';
+        const userName = sessionStorage.getItem('customerName') || userEmail.split('@')[0];
         const nameNode = document.getElementById('profile-username');
         const emailNode = document.getElementById('profile-email');
-        if(nameNode) nameNode.textContent = userEmail.split('@')[0];
+        if(nameNode) nameNode.textContent = userName;
         if(emailNode) emailNode.textContent = userEmail;
     }
 }
@@ -88,21 +89,23 @@ if (editProfileBtn && editProfileForm) {
                     editProfileBtn.disabled = true;
                     
                     try {
-                        const user = firebase.auth().currentUser;
-                        if (user) {
-                            // Update display name in Firebase Auth
-                            await user.updateProfile({ displayName: newUsername });
-                            
-                            // Update name in Firestore users collection
-                            await db.collection('users').doc(user.uid).update({
-                                name: newUsername
-                            });
-                            
+                        let users = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+                        let currentEmail = sessionStorage.getItem('customerEmail');
+                        let userIndex = users.findIndex(u => u.email === currentEmail);
+                        
+                        if (userIndex !== -1) {
+                            // Update name
+                            users[userIndex].name = newUsername;
                             // Update password if changed from dummy value
                             if (newPassword && newPassword !== '123456789') {
-                                await user.updatePassword(newPassword);
+                                users[userIndex].password = newPassword;
                             }
+                            localStorage.setItem('mockUsers', JSON.stringify(users));
                         }
+                        
+                        // Update session storage
+                        sessionStorage.setItem('customerName', newUsername);
+
                     } catch (error) {
                         console.error('Error updating profile:', error);
                         alert('Error: ' + error.message);
@@ -111,11 +114,10 @@ if (editProfileBtn && editProfileForm) {
                     editProfileBtn.disabled = false;
                     profileUsername.textContent = newUsername;
                     
-                    // Update email display to match actual user if logged in
+                    // Update email display
                     const profileEmail = document.getElementById('profile-email');
                     if (profileEmail) {
-                        const user = firebase.auth().currentUser;
-                        profileEmail.textContent = user ? user.email : newUsername.toLowerCase().replace(/\s+/g, '') + '@gmail.com';
+                        profileEmail.textContent = sessionStorage.getItem('customerEmail') || newUsername.toLowerCase().replace(/\s+/g, '') + '@gmail.com';
                     }
                 }
             }

@@ -33,7 +33,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const errorEl = document.getElementById('login-error');
     errorEl.style.display = 'none';
 
-    // Hardcoded Admin Check (For Demo Purposes)
+    // Admin Hardcoded Email for Demo
     if (email === 'admin@gmail.com' && pass === '123456789') {
         sessionStorage.setItem('adminAuth', 'true');
         sessionStorage.removeItem('customerAuth');
@@ -41,23 +41,23 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         return;
     }
 
-    // Default Customer Credentials Check (For Demo)
-    if (email === 'user@gmail.com' && pass === '123456789') {
-        sessionStorage.setItem('customerAuth', 'true');
-        sessionStorage.setItem('customerEmail', email);
-        sessionStorage.removeItem('adminAuth');
-        window.location.href = 'index.html';
-        return;
+    // Local Storage Mock Auth
+    let users = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+    let foundUser = users.find(u => u.email === email && u.password === pass);
+
+    // Support default user@gmail.com (and common typo user@gamil.com) if they haven't registered explicitly
+    if (!foundUser && (email === 'user@gmail.com' || email === 'user@gamil.com') && pass === '123456789') {
+        foundUser = { email: 'user@gmail.com', name: 'User' };
     }
 
-    try {
-        // Authenticate with Firebase (MOCKED FOR DEMO)
-        // const userCredential = await auth.signInWithEmailAndPassword(email, pass);
-        
-        throw new Error("Demo Mode: Please use admin@gmail.com or user@gmail.com with password 123456789");
-    } catch (error) {
-        console.error("Login Error:", error);
-        errorEl.textContent = error.message || 'Invalid credentials.';
+    if (foundUser) {
+        sessionStorage.setItem('customerAuth', 'true');
+        sessionStorage.setItem('customerEmail', foundUser.email);
+        sessionStorage.setItem('customerName', foundUser.name);
+        sessionStorage.removeItem('adminAuth');
+        window.location.href = 'index.html';
+    } else {
+        errorEl.textContent = 'Invalid email or password.';
         errorEl.style.display = 'block';
     }
 });
@@ -71,20 +71,23 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     const errorEl = document.getElementById('reg-error');
     errorEl.style.display = 'none';
 
-    if (email === 'sithumpehesara000@gmail.com' || email === 'user@gmail.com') {
+    let users = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+    
+    if (users.find(u => u.email === email) || email === 'admin@gmail.com' || email === 'user@gmail.com') {
         errorEl.textContent = 'Email already exists.';
         errorEl.style.display = 'block';
         return;
     }
 
     try {
-        // Create user in Firebase Auth (MOCKED FOR DEMO)
-        // const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        // Save to LocalStorage (Mock Database)
+        users.push({ name: name, email: email, password: pass });
+        localStorage.setItem('mockUsers', JSON.stringify(users));
         
         // Auto login as customer after register
         sessionStorage.setItem('customerAuth', 'true');
         sessionStorage.setItem('customerEmail', email);
-        alert("Demo Mode: Registration mocked successfully.");
+        sessionStorage.setItem('customerName', name);
         window.location.href = 'index.html';
     } catch (error) {
         console.error("Registration Error:", error);
